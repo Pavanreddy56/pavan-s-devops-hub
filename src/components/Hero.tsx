@@ -31,7 +31,7 @@ export const Hero = ({ isEditMode }: { isEditMode: boolean }) => {
         backgroundPosition: "center",
       }}
     >
-      <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/80 to-background" />
+      <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/80 to-background z-0" />
 
       <div className="container mx-auto px-4 relative z-10">
         <motion.div

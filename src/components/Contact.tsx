@@ -1,13 +1,23 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Mail, Linkedin, Github, Instagram, Send } from "lucide-react";
+import { Mail, Linkedin, Github, Instagram, Send, Edit3, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export const Contact = ({ isEditMode }: { isEditMode: boolean }) => {
+  const [isContactEditMode, setIsContactEditMode] = useState(false);
+  const [showPasswordDialog, setShowPasswordDialog] = useState(false);
+  const [passwordInput, setPasswordInput] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -17,6 +27,37 @@ export const Contact = ({ isEditMode }: { isEditMode: boolean }) => {
   const [instagramUrl, setInstagramUrl] = useState("https://instagram.com");
   
   const { toast } = useToast();
+
+  const handlePasswordSubmit = () => {
+    if (passwordInput === "Pavan56") {
+      setIsContactEditMode(true);
+      setShowPasswordDialog(false);
+      setPasswordInput("");
+      toast({
+        title: "Edit Mode Enabled",
+        description: "You can now edit the contact information.",
+      });
+    } else {
+      toast({
+        title: "Incorrect Password",
+        description: "Please try again.",
+        variant: "destructive",
+      });
+      setPasswordInput("");
+    }
+  };
+
+  const handleEditToggle = () => {
+    if (isContactEditMode) {
+      setIsContactEditMode(false);
+      toast({
+        title: "Changes Saved",
+        description: "Contact information has been updated.",
+      });
+    } else {
+      setShowPasswordDialog(true);
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,9 +87,19 @@ export const Contact = ({ isEditMode }: { isEditMode: boolean }) => {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-4 glow-text">
-            Get In Touch
-          </h2>
+          <div className="flex justify-center items-center gap-4 mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-center glow-text">
+              Get In Touch
+            </h2>
+            <Button
+              onClick={handleEditToggle}
+              size="icon"
+              variant="outline"
+              className="rounded-full"
+            >
+              {isContactEditMode ? <Lock className="h-5 w-5" /> : <Edit3 className="h-5 w-5" />}
+            </Button>
+          </div>
           <p className="text-center text-muted-foreground mb-12 text-lg">
             Let's discuss your next DevOps project
           </p>
@@ -113,7 +164,7 @@ export const Contact = ({ isEditMode }: { isEditMode: boolean }) => {
                       transition={{ delay: index * 0.1 }}
                       className="space-y-2"
                     >
-                      {isEditMode ? (
+                      {isContactEditMode ? (
                         <div className="flex items-center gap-2">
                           <social.icon className="h-5 w-5 text-primary shrink-0" />
                           <Input
@@ -159,6 +210,46 @@ export const Contact = ({ isEditMode }: { isEditMode: boolean }) => {
           </div>
         </motion.div>
       </div>
+
+      {/* Password Dialog */}
+      <Dialog open={showPasswordDialog} onOpenChange={setShowPasswordDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Enter Password</DialogTitle>
+            <DialogDescription>
+              Please enter the password to edit contact information.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <Input
+              type="password"
+              value={passwordInput}
+              onChange={(e) => setPasswordInput(e.target.value)}
+              placeholder="Enter password"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handlePasswordSubmit();
+                }
+              }}
+            />
+            <div className="flex gap-2">
+              <Button onClick={handlePasswordSubmit} className="flex-1">
+                Submit
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowPasswordDialog(false);
+                  setPasswordInput("");
+                }}
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };

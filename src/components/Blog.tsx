@@ -106,24 +106,31 @@ export const Blog = ({ isEditMode }: { isEditMode: boolean }) => {
                   </div>
                   <CardHeader>
                     {isEditMode && editingIndex === index ? (
-                      <Input
-                        value={post.title}
-                        onChange={(e) => updatePost(index, "title", e.target.value)}
-                        className="mb-2"
-                      />
+                      <div className="space-y-2">
+                        <Input
+                          value={post.title}
+                          onChange={(e) => updatePost(index, "title", e.target.value)}
+                          placeholder="Blog title"
+                        />
+                        <Textarea
+                          value={post.description}
+                          onChange={(e) => updatePost(index, "description", e.target.value)}
+                          className="min-h-[80px]"
+                          placeholder="Blog description"
+                        />
+                        <Input
+                          value={post.link}
+                          onChange={(e) => updatePost(index, "link", e.target.value)}
+                          placeholder="Blog URL"
+                        />
+                      </div>
                     ) : (
-                      <CardTitle className="text-xl">{post.title}</CardTitle>
-                    )}
-                    {isEditMode && editingIndex === index ? (
-                      <Textarea
-                        value={post.description}
-                        onChange={(e) => updatePost(index, "description", e.target.value)}
-                        className="min-h-[80px]"
-                      />
-                    ) : (
-                      <CardDescription className="text-foreground/70">
-                        {post.description}
-                      </CardDescription>
+                      <>
+                        <CardTitle className="text-xl">{post.title}</CardTitle>
+                        <CardDescription className="text-foreground/70">
+                          {post.description}
+                        </CardDescription>
+                      </>
                     )}
                   </CardHeader>
                   <CardFooter className="flex gap-2">
